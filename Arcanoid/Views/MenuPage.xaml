@@ -1,0 +1,19 @@
+﻿<Page x:Class="Arcanoid.Views.MenuPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Arcanoid.Views"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="MenuPage">
+
+    <StackPanel>
+        <Button   Margin="0 5"  Content="Continue Game"/>
+        <Button   Margin="0 5"  Content="New SinglePlayer Game"/>
+        <Button   Margin="0 5"  Content="New Multiplayer Game" Click="Button_Click"/>
+        <Button   Margin="0 5"  Content="Settings"/>
+        <Button   Margin="0 5"  Content="Records"/>
+        <Button   Margin="0 5"  Content="Exit Game"/>
+    </StackPanel>
+</Page>

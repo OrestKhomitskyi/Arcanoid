@@ -1,0 +1,60 @@
+﻿<Window x:Class="Arcanoid.Views.GameWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Arcanoid.Views"
+        mc:Ignorable="d"
+        Title="MainWindow" 
+        DataContext="{RelativeSource Self}"
+        Height="525"
+        Width="525"
+        KeyDown="move_carriage_key_down"
+        MouseMove="GameWindow_OnMouseMove"
+        Closed="GameWindow_OnClosed"
+        >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal">
+            <Button Click="go_to_menu_Click">Menu</Button>
+        </StackPanel>
+        <TextBlock Grid.Column="1" Margin="10" VerticalAlignment="Center" Grid.Row="0">Your score: <Run x:Name="Score"></Run></TextBlock>
+        <Canvas Grid.ColumnSpan="2" Grid.Row="1" Background="Bisque" x:Name="game_canvas">
+            <Rectangle MouseDown="GameWindow_OnMouseDown"
+                       MouseMove="RectangleRed_OnMouseMove"
+                       MouseLeave="RectangleRed_OnMouseLeave"
+                       MouseUp="RectangleRed_OnMouseUp"
+                       x:Name="rectangleRed"  
+                       Width="100" Height="25" RadiusX="3" RadiusY="3" 
+                       Fill="Red" Canvas.Left="0" 
+                       Canvas.Bottom="0" Opacity="1">
+            </Rectangle>
+            <Rectangle Fill="Azure" x:Name="MoveArea" Width="{Binding ElementName=game_canvas,Path=ActualWidth }" Height="25" Canvas.Bottom="0"  Canvas.ZIndex="-1"></Rectangle>
+            <Ellipse  Name="GameBallRed" Fill="{DynamicResource MyRadialGradientRed}" 
+                      Width="30" Height="30" Canvas.Left="35" 
+                      Canvas.Top="332" Opacity="1" />
+        </Canvas>
+        <StackPanel Grid.ColumnSpan="2" Grid.Row="2" Orientation="Horizontal">
+            <Button  x:Name="start_game" Click="start_game_Click" Content="Start Game"/>
+            <Button x:Name="pause_game" Click="pause_game_Click" Content="Pause Game"/>
+        </StackPanel>
+    </Grid>
+    <Window.Resources>
+        <RadialGradientBrush x:Key="MyRadialGradientRed" GradientOrigin="0.5,0.5">
+            <GradientStop Color="Transparent" Offset="1"></GradientStop>
+            <GradientStop Color="Red" Offset="0.8"></GradientStop>
+            <GradientStop Color="Red" Offset="0.5"></GradientStop>
+        </RadialGradientBrush>
+    </Window.Resources>
+        <!--<Frame x:Name="Frame"  Grid.Row="1" ></Frame>-->
+       
+    
+</Window>

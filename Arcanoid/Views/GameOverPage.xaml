@@ -1,0 +1,15 @@
+﻿<Page x:Class="Arcanoid.Views.GameOverPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Arcanoid.Views"
+      mc:Ignorable="d" 
+      d:DesignHeight="300" d:DesignWidth="300"
+      Title="GameOverPage">
+
+    <StackPanel VerticalAlignment="Center" Background="AliceBlue"> 
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="25pt">Game Over</TextBlock>
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="12pt">Press F5 to try again</TextBlock>
+    </StackPanel>
+</Page>
