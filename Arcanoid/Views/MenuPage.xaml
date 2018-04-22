@@ -9,11 +9,11 @@
       Title="MenuPage">
 
     <StackPanel>
-        <Button   Margin="0 5"  Content="Continue Game"/>
-        <Button   Margin="0 5"  Content="New SinglePlayer Game"/>
+        <Button   Margin="0 5"  Content="Continue Game" Click="Button_Click_2"/>
+        <Button   Margin="0 5"  Content="New SinglePlayer Game" Click="Button_Click_1"/>
         <Button   Margin="0 5"  Content="New Multiplayer Game" Click="Button_Click"/>
-        <Button   Margin="0 5"  Content="Settings"/>
+        <Button   Margin="0 5"  Content="Settings" Click="Button_Click_4"/>
         <Button   Margin="0 5"  Content="Records"/>
-        <Button   Margin="0 5"  Content="Exit Game"/>
+        <Button   Margin="0 5"  Content="Exit Game" Click="Button_Click_3"/>
     </StackPanel>
 </Page>

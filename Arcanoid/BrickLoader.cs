@@ -5,7 +5,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using System.Xml.Linq;
-
 namespace Arcanoid
 {
     public class BrickLoader
@@ -23,7 +22,7 @@ namespace Arcanoid
                     .ToList().ForEach(x => bricks.Add(new Brick()
                     {
                         Type = x.Element("type").Value,
-                        Color = getColor(x.Element("color").Value),
+                        HexColor = getColor(x.Element("color").Value),
                         Life = Convert.ToInt16(x.Element("life").Value)
                     }));
 
@@ -34,11 +33,21 @@ namespace Arcanoid
             }
             return bricks;
         }
-        public static SolidColorBrush getColor(string color)
+        public static string getColor(string color)
         {
             BrushConverter conv = new BrushConverter();
             SolidColorBrush brush = conv.ConvertFrom(color) as SolidColorBrush;
+
+            return brush.ToString();
+        }
+
+        public static SolidColorBrush GetColorBrush(string color)
+        {
+            BrushConverter conv = new BrushConverter();
+            SolidColorBrush brush = conv.ConvertFrom(color) as SolidColorBrush;
+
             return brush;
         }
+
     }
 }

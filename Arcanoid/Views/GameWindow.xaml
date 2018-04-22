@@ -25,6 +25,7 @@
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal">
             <Button Click="go_to_menu_Click">Menu</Button>
+            <Button Content="Save Progress"  Width="Auto" Click="Button_Click"/>
         </StackPanel>
         <TextBlock Grid.Column="1" Margin="10" VerticalAlignment="Center" Grid.Row="0">Your score: <Run x:Name="Score"></Run></TextBlock>
         <Canvas Grid.ColumnSpan="2" Grid.Row="1" Background="Bisque" x:Name="game_canvas">
@@ -44,7 +45,7 @@
         </Canvas>
         <StackPanel Grid.ColumnSpan="2" Grid.Row="2" Orientation="Horizontal">
             <Button  x:Name="start_game" Click="start_game_Click" Content="Start Game"/>
-            <Button x:Name="pause_game" Click="pause_game_Click" Content="Pause Game"/>
+            <TextBlock VerticalAlignment="Center" Text="F5 To Pause"/>
         </StackPanel>
     </Grid>
     <Window.Resources>
@@ -54,7 +55,7 @@
             <GradientStop Color="Red" Offset="0.5"></GradientStop>
         </RadialGradientBrush>
     </Window.Resources>
-        <!--<Frame x:Name="Frame"  Grid.Row="1" ></Frame>-->
-       
-    
+    <!--<Frame x:Name="Frame"  Grid.Row="1" ></Frame>-->
+
+
 </Window>

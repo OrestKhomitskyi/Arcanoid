@@ -18,6 +18,7 @@ namespace Arcanoid.Views
         private int gameScore = 0;
         public event Action Close;
         public event Action OpenMenu;
+        public event Action<GameSystemDataState> SaveGame;
 
 
         public int GameScore
@@ -30,17 +31,25 @@ namespace Arcanoid.Views
         }
 
 
-        public GameWindow()
+        public GameWindow(GameSystem loaded=null)
         {
             InitializeComponent();
             this.DataContext = this;
-            GameSystem = new GameSystem(ref game_canvas);
-            GameSystem.IncreaseScore += (score) =>
+            if (loaded == null)
             {
-                GameScore += score;
-                Score.Text = GameScore.ToString();
-            };
-
+                GameSystem = new GameSystem(ref game_canvas);
+                GameSystem.IncreaseScore += (score) =>
+                {
+                    GameScore += score;
+                    Score.Text = GameScore.ToString();
+                };
+                GameSystem.OnGameOver += () =>
+                {
+                    MessageBox.Show("Game Over");
+                };
+            }
+            else
+                GameSystem = loaded;
         }
         private void SetPages()
         {
@@ -49,7 +58,6 @@ namespace Arcanoid.Views
         }
         private void start_game_Click(object sender, RoutedEventArgs e)
         {
-
             GameSystem.Start();
         }
         private bool IsPaused = false;
@@ -126,6 +134,12 @@ namespace Arcanoid.Views
         private void GameWindow_OnClosed(object Sender, EventArgs E)
         {
             Close();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            SaveGame(GameSystem.State);
+            OpenMenu();
         }
     }
 }

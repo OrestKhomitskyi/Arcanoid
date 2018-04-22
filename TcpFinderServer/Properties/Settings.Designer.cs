@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Arcanoid.Properties {
+namespace TcpFinderServer.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -32,24 +32,15 @@ namespace Arcanoid.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("3001")]
         public int serverPort {
             get {
                 return ((int)(this["serverPort"]));
             }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool SoundOn {
-            get {
-                return ((bool)(this["SoundOn"]));
-            }
             set {
-                this["SoundOn"] = value;
+                this["serverPort"] = value;
             }
         }
     }

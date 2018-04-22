@@ -1,52 +1,55 @@
 ﻿using Arcanoid.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using System.Xml.Serialization;
 
 namespace Arcanoid
 {
     public class GameSystem
     {
         public event Action StopAction;
-
-        private Canvas canvas;
-        private int CurrentStage;
-        private List<Brick> bricks = new List<Brick>();
-        int skipTick = 5;
-        private double RedGameBallLeft = 0;
-        private double RedGameBallTop = 0;
-        private int RedBallCurrentDirection = 1;
-        private float motionRatio = 0;
-        private bool _isClockWise = true; // true = clockwise , false = anti-clockwise
-        private static DispatcherTimer movingTimer;
-
-        private Rectangle lastCollapsed = default(Rectangle);
-
+        public event Action OnGameOver;
         public event Action<int> IncreaseScore;
 
-
+        private Canvas canvas;
+        private static DispatcherTimer movingTimer;
+        private Brick lastCollapsed = default(Brick);
+        public GameSystemDataState State { get; set; }
 
         public GameSystem(ref Canvas canvas)
         {
             this.canvas = canvas;
             StopAction += () => { movingTimer.Stop(); };
+            OnGameOver += () => { movingTimer.Stop(); };
+            State = new GameSystemDataState();
         }
 
 
+        //public void ContinuePrevious(GameSystemDataState lastState)
+        //{
+        //    State = lastState;
+        //    SetInitialState();
+        //    movingTimer?.Stop();
+        //    movingTimer = new DispatcherTimer();
+        //    movingTimer.Interval = TimeSpan.FromMilliseconds(1);
+        //    movingTimer.Tick += MovingTimer_Tick;
+        //    movingTimer.Start();
+        //}
 
         public void Start()
         {
             SetInitialState();
-            if (movingTimer != null)
-            {
-                movingTimer.Stop();
-            }
-
+            movingTimer?.Stop();
             movingTimer = new DispatcherTimer();
             movingTimer.Interval = TimeSpan.FromMilliseconds(1);
             movingTimer.Tick += MovingTimer_Tick;
@@ -63,29 +66,39 @@ namespace Arcanoid
 
         private void MovingTimer_Tick(object sender, EventArgs e)
         {
-            RedBallCurrentDirection = getDirection(
+
+
+            State.RedBallCurrentDirection = getDirection(
                 (Ellipse)canvas.FindName("GameBallRed"),
-                RedBallCurrentDirection,
+                State.RedBallCurrentDirection,
                 (Rectangle)canvas.FindName("rectangleRed")
             );
 
-            moveGameBall(RedBallCurrentDirection, ref RedGameBallTop, ref RedGameBallLeft,
+            Debug.WriteLine("Picki");
+
+            moveGameBall(State.RedBallCurrentDirection, ref State.RedGameBallTop, ref State.RedGameBallLeft,
                 (Ellipse)canvas.FindName("GameBallRed"));
-            checkBreakCollapse(ref RedBallCurrentDirection, (Ellipse)canvas.FindName("GameBallRed"));
 
 
+            checkBreakCollapse(ref State.RedBallCurrentDirection, (Ellipse)canvas.FindName("GameBallRed"));
         }
         private void SetInitialState()
         {
             clearCanvas();
-            bricks = new List<Brick>();
-            motionRatio = 4;
-            CurrentStage = 1;
-            bricks = BrickLoader.load(CurrentStage);
-            BrickDrawer.DrawGrid(bricks, ref canvas);
-            RedBallCurrentDirection = 3;
-            RedGameBallLeft = 40;
-            RedGameBallTop = 200;
+            State.SetInitialState();
+
+            BrickDrawer.DrawGrid(State.bricks, ref canvas);
+
+            Rectangle rectangleRed = (Rectangle) canvas.FindName("rectangleRed");
+
+            double left = Canvas.GetLeft(rectangleRed)+(rectangleRed.ActualWidth/2);
+            double top = canvas.ActualHeight - 60;
+            State.RedGameBallLeft = left;
+            State.RedGameBallTop = top;
+
+
+            Canvas.SetLeft((Ellipse)canvas.FindName("GameBallRed"), State.RedGameBallLeft);
+            Canvas.SetTop((Ellipse)canvas.FindName("GameBallRed"), State.RedGameBallTop);
         }
 
 
@@ -100,12 +113,12 @@ namespace Arcanoid
                 {
                     if (_currentDirection == 0)
                     {
-                        _isClockWise = true;
+                        State._isClockWise = true;
                         return 1;
                     }
                     else
                     {
-                        _isClockWise = false;
+                        State._isClockWise = false;
                         return 2;
                     }
                 }
@@ -113,12 +126,12 @@ namespace Arcanoid
                 {
                     if (_currentDirection == 2)
                     {
-                        _isClockWise = true;
+                        State._isClockWise = true;
                         return 3;
                     }
                     else
                     {
-                        _isClockWise = false;
+                        State._isClockWise = false;
                         return 0;
                     }
                 }
@@ -126,12 +139,12 @@ namespace Arcanoid
                 {
                     if (_currentDirection == 3)
                     {
-                        _isClockWise = true;
+                        State._isClockWise = true;
                         return 0;
                     }
                     else
                     {
-                        _isClockWise = false;
+                        State._isClockWise = false;
                         return 1;
                     }
                 }
@@ -139,12 +152,12 @@ namespace Arcanoid
                 {
                     if (_currentDirection == 1)
                     {
-                        _isClockWise = true;
+                        State._isClockWise = true;
                         return 2;
                     }
                     else
                     {
-                        _isClockWise = false;
+                        State._isClockWise = false;
                         return 3;
                     }
                 }
@@ -174,9 +187,6 @@ namespace Arcanoid
             }
 
         }
-
-
-
         #region Logic
 
 
@@ -206,8 +216,7 @@ namespace Arcanoid
             }
             else if ((_ballBottom >= _RTBrick && (_ballLeft < _RLBrick || _ballLeft > _RRBrick)))
             {
-                MessageBox.Show("Game Over!!!");
-                movingTimer.Stop();
+                OnGameOver();
                 return true;
             }
 
@@ -224,101 +233,109 @@ namespace Arcanoid
             double _ballCenterY = Canvas.GetLeft(_gameBall) + (_gameBall.Width / 2);
 
             var ballCoordinate = getCircularPoints(_gameBall);
-            var conflictedBrick = bricks.Where(s => ballCoordinate.Any(p =>
+            var conflictedBrick = State.bricks.Where(s => ballCoordinate.Any(p =>
                     s.Type != "skip" &&
-                    p.X >= Canvas.GetLeft(s.Rectangle) &&
-                    p.X <= Canvas.GetLeft(s.Rectangle) + s.Rectangle.Width &&
-                    p.Y <= Canvas.GetTop(s.Rectangle) + s.Rectangle.Height &&
-                    p.Y >= Canvas.GetTop(s.Rectangle)));
+                    p.X >= s.Left &&
+                    p.X <= s.Left + s.Width &&
+                    p.Y <= s.Top + s.Height &&
+                    p.Y >= s.Top));
 
 
             if (conflictedBrick.Count() > 0)
             {
-                Rectangle cBrick = conflictedBrick.FirstOrDefault().Rectangle;
+                Brick cBrick = conflictedBrick.FirstOrDefault();
+                Rectangle cRectangle = canvas.FindRectangleByName(cBrick.Id) as Rectangle;
 
-                if (lastCollapsed == cBrick && skipTick > 0)
+                if (lastCollapsed == cBrick && State.skipTick > 0)
                 {
-                    skipTick--;
+                    State.skipTick--;
                     return false;
                 }
                 else
                 {
-                    skipTick = 5;
+                    State.skipTick = 5;
                     lastCollapsed = cBrick;
                 }
                 var nearCoordinate1 = ballCoordinate.Where(p =>
-                                        p.X >= Canvas.GetLeft(cBrick) &&
-                                        p.X <= Canvas.GetLeft(cBrick) + cBrick.Width &&
-                                        p.Y <= Canvas.GetTop(cBrick) + cBrick.Height &&
-                                        p.Y >= Canvas.GetTop(cBrick));
+                                        p.X >= cBrick.Left  &&
+                                        p.X <= cBrick.Left + cBrick.Width &&
+                                        p.Y <= cBrick.Top + cBrick.Height &&
+                                        p.Y >= cBrick.Top);
 
                 var xmin = nearCoordinate1.Min(s => s.X);
                 var ymin = nearCoordinate1.Min(s => s.Y);
 
                 var nearCoordinate = xmin < ymin ? nearCoordinate1.OrderByDescending(s => s.X).First() : nearCoordinate1.OrderByDescending(s => s.Y).First();
 
-                if (cBrick == default(Rectangle))
+                if (cBrick == default(Brick))
                     MessageBox.Show("Somethign issue");
 
-                if (Canvas.GetTop(cBrick) <= _ballBottom &&        // top
-                     Canvas.GetTop(cBrick) + cBrick.Height > _ballBottom &&
-                     Canvas.GetLeft(cBrick) <= _ballCenterY &&
-                     Canvas.GetLeft(cBrick) + cBrick.Width >= _ballCenterY)
+                if (cBrick.Top <= _ballBottom &&        // top
+                    cBrick.Top + cBrick.Height > _ballBottom &&
+                    cBrick.Left <= _ballCenterY &&
+                    cBrick.Left + cBrick.Width >= _ballCenterY)
                 {
-                    _isClockWise = currentDirection == 0 ? false : true;
+                    State._isClockWise = currentDirection == 0 ? false : true;
                 }
-                else if (Canvas.GetTop(cBrick) + cBrick.Height >= _ballCenterX &&             // left
-                     Canvas.GetTop(cBrick) < _ballCenterX &&
-                     Canvas.GetLeft(cBrick) <= _ballRight &&
-                     Canvas.GetLeft(cBrick) + cBrick.Width > _ballRight)
+                else if (cBrick.Top + cBrick.Height >= _ballCenterX &&             // left
+                         cBrick.Top < _ballCenterX &&
+                         cBrick.Left <= _ballRight &&
+                         cBrick.Left + cBrick.Width > _ballRight)
                 {
-                    _isClockWise = currentDirection == 3 ? false : true;
+                    State._isClockWise = currentDirection == 3 ? false : true;
                 }
-                else if (Canvas.GetTop(cBrick) + cBrick.Height >= _ballTop &&                 // bottom
-                                                        Canvas.GetTop(cBrick) < _ballTop &&
-                                                        Canvas.GetLeft(cBrick) <= _ballCenterY &&
-                                                        Canvas.GetLeft(cBrick) + cBrick.Width >= _ballCenterY)
+                else if (cBrick.Top + cBrick.Height >= _ballTop &&                 // bottom
+                                                        cBrick.Top < _ballTop &&
+                                                        cBrick.Left <= _ballCenterY &&
+                                                        cBrick.Left + cBrick.Width >= _ballCenterY)
                 {
-                    _isClockWise = currentDirection == 3 ? true : false;
+                    State._isClockWise = currentDirection == 3 ? true : false;
                 }
-                else if (Canvas.GetTop(cBrick) + cBrick.Height >= _ballCenterX &&             // right
-                                                        Canvas.GetTop(cBrick) < _ballCenterX &&
-                                                        Canvas.GetLeft(cBrick) < _ballLeft &&
-                                                        Canvas.GetLeft(cBrick) + cBrick.Width >= _ballLeft)
+                else if (cBrick.Top + cBrick.Height >= _ballCenterX &&             // right
+                                                        cBrick.Top < _ballCenterX &&
+                                                        cBrick.Left < _ballLeft &&
+                                                        cBrick.Left + cBrick.Width >= _ballLeft)
                 {
-                    _isClockWise = currentDirection == 2 ? true : false;
+                    State._isClockWise = currentDirection == 2 ? true : false;
                 }
 
-                changeBallDirection(ref currentDirection, _gameBall, cBrick, nearCoordinate);
-                int index = bricks.Select(x => x.Rectangle).ToList().IndexOf(cBrick);
+                changeBallDirection(ref currentDirection, _gameBall, cRectangle, nearCoordinate);
+                //Strange code
+                //int index = State.bricks.Select(x => x.Rectangle).ToList().IndexOf(cBrick);
+                int index = State.bricks.IndexOf(cBrick);
 
                 if (index < 0)
+                {
                     MessageBox.Show("Incorrect brick");
+                    throw new Exception("Incorrect Brick");
+                }
 
                 //Lifes
-
-                if (bricks[index].Life > 1)
+                if (cBrick.Life > 1)
                 {
-                    bricks[index].Color = BrickLoader.getColor("#ffffff");
-                    bricks[index].Life--;
-                    bricks[index].Rectangle.Fill = bricks[index].Color;
+                    cBrick.HexColor = BrickLoader.getColor("#ffffff");
+                    cBrick.Life--;
+                    cRectangle.Fill = BrickLoader.GetColorBrush(cBrick.HexColor);
+
+                    Brick b=State.bricks.Single(x => x == cBrick);
                 }
                 else
                 {
                     IncreaseScore(10);
-                    conflictedBrick.FirstOrDefault().Rectangle.Visibility = System.Windows.Visibility.Collapsed;
-                    Brick toDelete = bricks.Where(x => x.Rectangle == cBrick).First();
-                    bricks.Remove(toDelete);
+                    cRectangle.Visibility = System.Windows.Visibility.Collapsed;
+                    //Brick toDelete = State.bricks.Where(x => x.Rectangle == cBrick).First();
+                    State.bricks.Remove(cBrick);
                     //brickInfo[index] = "0";
                 }
+                //canvas.UpdateLayout();
 
                 //brickInfo = brickInfo.Where(s => s.ToString() != "0").ToArray();
 
-                if (bricks.Where(s => s.Type != "skip" && s.Rectangle.Visibility == System.Windows.Visibility.Visible).Count() == 0)
+                if (State.bricks.Where(s => s.Type != "skip").Count() <= 0)
                 {
-                    MessageBox.Show($"You have completed Stage : {CurrentStage++}!!! ");
-
-                    SetInitialState();
+                    MessageBox.Show($"You have completed Stage : {State._currentStage++}!!! ");
+                    State._currentStage++;
+                    State.SetInitialState();
                     return true;
                 }
                 return true;
@@ -331,35 +348,38 @@ namespace Arcanoid
         #endregion
         private void clearCanvas()
         {
-            foreach (Brick brick in bricks)
+            foreach (Brick brick in State.bricks)
             {
                 if (brick.Type != "skip")
                 {
-                    brick.Rectangle.Visibility = System.Windows.Visibility.Collapsed;
-                    canvas.Children.Remove(brick.Rectangle);
+                    Rectangle r=canvas.FindRectangleByName(brick.Id) as Rectangle;
+                    r.Visibility = System.Windows.Visibility.Collapsed;
+                    canvas.Children.Remove(r);
                 }
             }
             canvas.UpdateLayout();
-            bricks.Clear();
+            State.bricks.Clear();
         }
         private void moveGameBall(int direction, ref double gameBallTop, ref double gameBallLeft, Ellipse gameBall)
         {
+
             switch (direction)
             {
                 case 0:
-                    gameBallTop += motionRatio;
-                    gameBallLeft += motionRatio; break;
+                    gameBallTop += State.motionRatio;
+                    gameBallLeft += State.motionRatio;
+                    break;
                 case 1:
-                    gameBallTop += motionRatio;
-                    gameBallLeft -= motionRatio;
+                    gameBallTop += State.motionRatio;
+                    gameBallLeft -= State.motionRatio;
                     break;
                 case 2:
-                    gameBallTop -= motionRatio;
-                    gameBallLeft -= motionRatio;
+                    gameBallTop -= State.motionRatio;
+                    gameBallLeft -= State.motionRatio;
                     break;
                 case 3:
-                    gameBallTop -= motionRatio;
-                    gameBallLeft += motionRatio;
+                    gameBallTop -= State.motionRatio;
+                    gameBallLeft += State.motionRatio;
                     break;
                 default:
                     MessageBox.Show("Ehhh Error occur!!!");
@@ -390,6 +410,7 @@ namespace Arcanoid
         }
         private void changeBallDirection(ref int _currentDirection, Ellipse _gameBall, Rectangle _crashBrick, Coordinate nearCoordinate)
         {
+
             int hitAt;
             int left = (int)(nearCoordinate.X - Canvas.GetLeft(_crashBrick));
             int right = (int)(nearCoordinate.X - (Canvas.GetLeft(_crashBrick) + _crashBrick.Width));
@@ -461,7 +482,6 @@ namespace Arcanoid
             }
         }
         #endregion
-
-
     }
+    
 }

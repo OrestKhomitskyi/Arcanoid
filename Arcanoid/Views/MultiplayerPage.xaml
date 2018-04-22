@@ -15,12 +15,20 @@
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <ListBox></ListBox>
-        <StackPanel Grid.Column="1">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center">Hosts</TextBlock>
+        <ListBox Grid.Row="1"></ListBox>
+        <StackPanel Grid.Row="1" Grid.Column="1">
             <Label>Enter your name</Label>
             <TextBox x:Name="UserName"></TextBox>
             <Button Click="Connect_OnClick">Connect</Button>
-            <Button Click="Host_OnClick">Host</Button>
+            <GroupBox Header="Host">
+                <Label>Servername</Label>
+            </GroupBox>
+            <Button Click="Host_OnClick">Create Host</Button>
         </StackPanel>
     </Grid>
 </Page>

@@ -16,7 +16,7 @@ namespace Arcanoid
         {
             game = Game.GetInstance();
             game.Closed += () => Application.Current.Shutdown();
-            game.Show();
+            game.StartUp();
         }
 
         
