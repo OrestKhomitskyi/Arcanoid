@@ -31,25 +31,22 @@ namespace Arcanoid.Views
         }
 
 
-        public GameWindow(GameSystem loaded=null)
+        public GameWindow()
         {
             InitializeComponent();
             this.DataContext = this;
-            if (loaded == null)
+            
+            GameSystem = new GameSystem(ref game_canvas);
+            GameSystem.IncreaseScore += (score) =>
             {
-                GameSystem = new GameSystem(ref game_canvas);
-                GameSystem.IncreaseScore += (score) =>
-                {
-                    GameScore += score;
-                    Score.Text = GameScore.ToString();
-                };
-                GameSystem.OnGameOver += () =>
-                {
-                    MessageBox.Show("Game Over");
-                };
-            }
-            else
-                GameSystem = loaded;
+                GameScore += score;
+                Score.Text = GameScore.ToString();
+            };
+            GameSystem.OnGameOver += () =>
+            {
+                MessageBox.Show("Game Over");
+            };
+
         }
         private void SetPages()
         {
@@ -74,12 +71,6 @@ namespace Arcanoid.Views
             }
             else
                 GameSystem.key_down(e);
-        }
-
-        private void pause_game_Click(object sender, RoutedEventArgs e)
-        {
-
-
         }
 
         public void go_to_menu_Click(object sender, RoutedEventArgs e)

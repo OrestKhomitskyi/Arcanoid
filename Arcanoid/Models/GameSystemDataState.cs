@@ -14,25 +14,18 @@ namespace Arcanoid
     public class GameSystemDataState
     {
         public int _currentStage = 1;
-
-        [NonSerialized]
-        public List<Brick> bricks = new List<Brick>();
+        public List<Brick> bricks;
         public int skipTick = 5;
         public double RedGameBallLeft = 40;
         public double RedGameBallTop = 200;
-        public int RedBallCurrentDirection = 1;
+        public int RedBallCurrentDirection = 3;
         public float motionRatio = 4;
         public bool _isClockWise = true; // true = clockwise , false = anti-clockwise
 
-        public void SetInitialState()
+
+        public GameSystemDataState()
         {
-            motionRatio = 4;
             bricks = BrickLoader.load(_currentStage);
-            RedBallCurrentDirection = 3;
-            RedGameBallLeft = 40;
-            RedGameBallTop = 200;
-            _isClockWise = true;
-            skipTick = 5;
         }
     }
 }

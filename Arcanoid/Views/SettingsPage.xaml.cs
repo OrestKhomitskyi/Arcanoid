@@ -29,11 +29,11 @@ namespace Arcanoid.Views
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
-            CheckBox cb = (CheckBox)sender;
-            ToggleMusic(cb.IsChecked);
-            Settings.Default.SoundOn = (bool)cb.IsChecked;
-            Settings.Default.Save();
-            MessageBox.Show(Settings.Default.SoundOn.ToString());
+            //CheckBox cb = (CheckBox)sender;
+            //ToggleMusic(cb.IsChecked);
+            //Settings.Default.SoundOn = (bool)cb.IsChecked;
+            //Settings.Default.Save();
+            //MessageBox.Show(Settings.Default.SoundOn.ToString());
         }
     }
 }

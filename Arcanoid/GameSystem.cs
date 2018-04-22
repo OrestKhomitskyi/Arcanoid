@@ -22,7 +22,7 @@ namespace Arcanoid
         public event Action<int> IncreaseScore;
 
         private Canvas canvas;
-        private static DispatcherTimer movingTimer;
+        private DispatcherTimer movingTimer;
         private Brick lastCollapsed = default(Brick);
         public GameSystemDataState State { get; set; }
 
@@ -68,24 +68,24 @@ namespace Arcanoid
         {
 
 
-            State.RedBallCurrentDirection = getDirection(
-                (Ellipse)canvas.FindName("GameBallRed"),
-                State.RedBallCurrentDirection,
-                (Rectangle)canvas.FindName("rectangleRed")
-            );
+            //State.RedBallCurrentDirection = getDirection(
+            //    (Ellipse)canvas.FindName("GameBallRed"),
+            //    State.RedBallCurrentDirection,
+            //    (Rectangle)canvas.FindName("rectangleRed")
+            //);
 
-            Debug.WriteLine("Picki");
+            Debug.WriteLine(Guid.NewGuid().ToString());
 
             moveGameBall(State.RedBallCurrentDirection, ref State.RedGameBallTop, ref State.RedGameBallLeft,
                 (Ellipse)canvas.FindName("GameBallRed"));
 
 
-            checkBreakCollapse(ref State.RedBallCurrentDirection, (Ellipse)canvas.FindName("GameBallRed"));
+            //checkBreakCollapse(ref State.RedBallCurrentDirection, (Ellipse)canvas.FindName("GameBallRed"));
         }
         private void SetInitialState()
         {
             clearCanvas();
-            State.SetInitialState();
+            //State.SetInitialState();
 
             BrickDrawer.DrawGrid(State.bricks, ref canvas);
 
@@ -95,7 +95,7 @@ namespace Arcanoid
             double top = canvas.ActualHeight - 60;
             State.RedGameBallLeft = left;
             State.RedGameBallTop = top;
-
+            
 
             Canvas.SetLeft((Ellipse)canvas.FindName("GameBallRed"), State.RedGameBallLeft);
             Canvas.SetTop((Ellipse)canvas.FindName("GameBallRed"), State.RedGameBallTop);
@@ -335,7 +335,7 @@ namespace Arcanoid
                 {
                     MessageBox.Show($"You have completed Stage : {State._currentStage++}!!! ");
                     State._currentStage++;
-                    State.SetInitialState();
+                    State.bricks = BrickLoader.load(State._currentStage);
                     return true;
                 }
                 return true;
@@ -350,7 +350,7 @@ namespace Arcanoid
         {
             foreach (Brick brick in State.bricks)
             {
-                if (brick.Type != "skip")
+                if (brick.Type != "skip" && brick.Id!=null)
                 {
                     Rectangle r=canvas.FindRectangleByName(brick.Id) as Rectangle;
                     r.Visibility = System.Windows.Visibility.Collapsed;

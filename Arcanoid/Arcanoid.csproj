@@ -84,8 +84,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BrickDrawer.cs" />
-    <Compile Include="Composite.cs" />
-    <Compile Include="GameSystemDataState.cs" />
+    <Compile Include="Models\GameSystemDataState.cs" />
     <Compile Include="Music\MusicPlayer.cs" />
     <Compile Include="SaveGameStateOriginator.cs" />
     <Compile Include="GameMode.cs" />
@@ -95,7 +94,7 @@
     <Compile Include="Models\Brick.cs" />
     <Compile Include="BrickLoader.cs" />
     <Compile Include="GameSystem.cs" />
-    <Compile Include="Coordinate.cs" />
+    <Compile Include="Models\Coordinate.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Models\Bonuses\ExpandCarette.cs" />
     <Compile Include="Models\ModelContext.cs" />

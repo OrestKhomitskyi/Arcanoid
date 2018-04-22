@@ -71,7 +71,7 @@ namespace Arcanoid
         private void MenuWindow_ContinueGame()
         {
             MenuWindow.Hide();
-            window=new GameWindow((GameSystem)Originator.GetMemento());
+            //window=new GameWindow((GameSystem)Originator.GetMemento());
         }
 
         private void Window_SaveGame(GameSystemDataState obj)
