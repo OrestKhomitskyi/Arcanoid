@@ -3,15 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-using System.Xml.Serialization;
 
 namespace Arcanoid
 {
@@ -68,11 +64,11 @@ namespace Arcanoid
         {
 
 
-            //State.RedBallCurrentDirection = getDirection(
-            //    (Ellipse)canvas.FindName("GameBallRed"),
-            //    State.RedBallCurrentDirection,
-            //    (Rectangle)canvas.FindName("rectangleRed")
-            //);
+            State.RedBallCurrentDirection = getDirection(
+                (Ellipse)canvas.FindName("GameBallRed"),
+                State.RedBallCurrentDirection,
+                (Rectangle)canvas.FindName("rectangleRed")
+            );
 
             Debug.WriteLine(Guid.NewGuid().ToString());
 
@@ -80,22 +76,22 @@ namespace Arcanoid
                 (Ellipse)canvas.FindName("GameBallRed"));
 
 
-            //checkBreakCollapse(ref State.RedBallCurrentDirection, (Ellipse)canvas.FindName("GameBallRed"));
+            checkBreakCollapse(ref State.RedBallCurrentDirection, (Ellipse)canvas.FindName("GameBallRed"));
         }
         private void SetInitialState()
         {
             clearCanvas();
-            //State.SetInitialState();
+            State = new GameSystemDataState();
 
             BrickDrawer.DrawGrid(State.bricks, ref canvas);
 
-            Rectangle rectangleRed = (Rectangle) canvas.FindName("rectangleRed");
+            Rectangle rectangleRed = (Rectangle)canvas.FindName("rectangleRed");
 
-            double left = Canvas.GetLeft(rectangleRed)+(rectangleRed.ActualWidth/2);
+            double left = Canvas.GetLeft(rectangleRed) + (rectangleRed.ActualWidth / 2);
             double top = canvas.ActualHeight - 60;
             State.RedGameBallLeft = left;
             State.RedGameBallTop = top;
-            
+
 
             Canvas.SetLeft((Ellipse)canvas.FindName("GameBallRed"), State.RedGameBallLeft);
             Canvas.SetTop((Ellipse)canvas.FindName("GameBallRed"), State.RedGameBallTop);
@@ -257,7 +253,7 @@ namespace Arcanoid
                     lastCollapsed = cBrick;
                 }
                 var nearCoordinate1 = ballCoordinate.Where(p =>
-                                        p.X >= cBrick.Left  &&
+                                        p.X >= cBrick.Left &&
                                         p.X <= cBrick.Left + cBrick.Width &&
                                         p.Y <= cBrick.Top + cBrick.Height &&
                                         p.Y >= cBrick.Top);
@@ -317,7 +313,7 @@ namespace Arcanoid
                     cBrick.Life--;
                     cRectangle.Fill = BrickLoader.GetColorBrush(cBrick.HexColor);
 
-                    Brick b=State.bricks.Single(x => x == cBrick);
+                    Brick b = State.bricks.Single(x => x == cBrick);
                 }
                 else
                 {
@@ -348,11 +344,12 @@ namespace Arcanoid
         #endregion
         private void clearCanvas()
         {
+            if (State == null) return;
             foreach (Brick brick in State.bricks)
             {
-                if (brick.Type != "skip" && brick.Id!=null)
+                if (brick.Type != "skip" && brick.Id != null)
                 {
-                    Rectangle r=canvas.FindRectangleByName(brick.Id) as Rectangle;
+                    Rectangle r = canvas.FindRectangleByName(brick.Id) as Rectangle;
                     r.Visibility = System.Windows.Visibility.Collapsed;
                     canvas.Children.Remove(r);
                 }
@@ -483,5 +480,5 @@ namespace Arcanoid
         }
         #endregion
     }
-    
+
 }

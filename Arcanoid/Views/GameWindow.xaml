@@ -12,6 +12,9 @@
         KeyDown="move_carriage_key_down"
         MouseMove="GameWindow_OnMouseMove"
         Closed="GameWindow_OnClosed"
+        WindowStartupLocation="CenterScreen"
+        MinHeight="600"
+        MinWidth="930"
         >
     <Grid>
         <Grid.RowDefinitions>

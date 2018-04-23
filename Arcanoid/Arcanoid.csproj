@@ -85,6 +85,7 @@
     </ApplicationDefinition>
     <Compile Include="BrickDrawer.cs" />
     <Compile Include="Models\GameSystemDataState.cs" />
+    <Compile Include="Music\MusicException.cs" />
     <Compile Include="Music\MusicPlayer.cs" />
     <Compile Include="SaveGameStateOriginator.cs" />
     <Compile Include="GameMode.cs" />
@@ -211,6 +212,7 @@
   <ItemGroup>
     <Folder Include="bin\Debug\MusicSource\" />
     <Folder Include="Helpers\" />
+    <Folder Include="NewFolder1\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="bin\Debug\Bricks.xml" />

@@ -9,6 +9,7 @@
         Title="MenuWindow" Height="450" Width="800"
         Loaded="Window_Loaded"
         Closed="MenuWindow_OnClosed"
+        WindowStartupLocation="CenterScreen"
         >
     <Frame x:Name="Frame"/>
 </Window>

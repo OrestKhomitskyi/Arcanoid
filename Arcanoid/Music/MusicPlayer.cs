@@ -1,27 +1,19 @@
-﻿using System;
+﻿using NAudio.Wave;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
-using System.Media;
 using System.Threading;
-using NAudio.Wave;
+using System.Threading.Tasks;
 
 namespace Arcanoid.Music
 {
-    class MusicPlayer:IDisposable
+    class MusicPlayer : IDisposable
     {
         private List<string> list = Directory.GetFiles("MusicSource").Select(Path.GetFullPath).ToList();
         private IEnumerator<string> enumerator;
         private WaveOutEvent OutputDevice;
         private CancellationTokenSource PlayTokenSource;
-        
-        public MusicPlayer()
-        {
-
-        }
 
         public Task Play()
         {
@@ -44,7 +36,7 @@ namespace Arcanoid.Music
                         }
                     }
                 }
-            },PlayTokenSource.Token);
+            }, PlayTokenSource.Token);
         }
         public void Dispose()
         {

@@ -1,9 +1,6 @@
-﻿using Arcanoid.Views;
+﻿using Arcanoid.Music;
+using Arcanoid.Views;
 using System;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Windows.Media;
-using Arcanoid.Music;
 
 namespace Arcanoid
 {
@@ -13,7 +10,7 @@ namespace Arcanoid
         private static object syncRoot = new Object();
         private GameMode GameMode;
         private SaveGameStateOriginator Originator;
-        //private MusicPlayer MusicPlayer = new MusicPlayer();
+        private MusicPlayer MusicPlayer = new MusicPlayer();
 
 
         public event Action Closed;
@@ -38,12 +35,12 @@ namespace Arcanoid
             MenuWindow = new MenuWindow();
             Originator = new SaveGameStateOriginator();
             BuildWindowActions();
-            //EnableMusic();
+            EnableMusic();
         }
 
         public async void EnableMusic()
         {
-            //await MusicPlayer.Play();
+            await MusicPlayer.Play();
         }
 
         public void BuildWindowActions()
@@ -63,9 +60,9 @@ namespace Arcanoid
 
         private async void MenuWindow_ToggleMusic(bool? obj)
         {
-            //if (obj == false)
-            //    await MusicPlayer.Play();
-            //else MusicPlayer.Dispose();
+            if (obj == false)
+                await MusicPlayer.Play();
+            else MusicPlayer.Dispose();
         }
 
         private void MenuWindow_ContinueGame()
@@ -76,9 +73,9 @@ namespace Arcanoid
 
         private void Window_SaveGame(GameSystemDataState obj)
         {
-            if(obj!=null)
+            if (obj != null)
                 Originator.SetMemento(obj);
-        } 
+        }
 
         public void OpenMenu()
         {
@@ -97,6 +94,6 @@ namespace Arcanoid
             //MenuWindow.Show();
             window.Show();
         }
-        
+
     }
 }
