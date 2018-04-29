@@ -87,6 +87,13 @@
     <Compile Include="Models\GameSystemDataState.cs" />
     <Compile Include="Music\MusicException.cs" />
     <Compile Include="Music\MusicPlayer.cs" />
+    <Compile Include="Patterns\Mediator\Colleague.cs" />
+    <Compile Include="Patterns\Mediator\Colleague1.cs" />
+    <Compile Include="Patterns\Mediator\Mediator.cs" />
+    <Compile Include="Patterns\Mediator\MyMediator.cs" />
+    <Compile Include="Patterns\Strategy\ArraySortingContext.cs" />
+    <Compile Include="Patterns\Strategy\ArraySortingStrategy.cs" />
+    <Compile Include="Patterns\Strategy\Strategy.cs" />
     <Compile Include="SaveGameStateOriginator.cs" />
     <Compile Include="GameMode.cs" />
     <Compile Include="IOriginator.cs" />
@@ -184,6 +191,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="bin\Debug\save.dat" />
     <None Include="Diagrams\ArcanoidClassDiagram.cd" />
     <None Include="Diagrams\ClassDiagram1.cd" />
     <None Include="Diagrams\Classes\BusinessLogic.cd" />
@@ -210,9 +218,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="bin\Debug\MusicSource\" />
     <Folder Include="Helpers\" />
-    <Folder Include="NewFolder1\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="bin\Debug\Bricks.xml" />
@@ -225,6 +231,21 @@
       <Project>{032c072a-5b5f-40da-a759-f3f3ae5051b0}</Project>
       <Name>MultiPlayerLibrary</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\Debug\MusicSource\01. alone in a room.mp3" />
+    <Content Include="bin\Debug\MusicSource\02. into the fire.mp3" />
+    <Content Include="bin\Debug\MusicSource\03. hopelessly hopeful.mp3" />
+    <Content Include="bin\Debug\MusicSource\04. where did it go.mp3" />
+    <Content Include="bin\Debug\MusicSource\05. rise up.mp3" />
+    <Content Include="bin\Debug\MusicSource\06. when the lights come on.mp3" />
+    <Content Include="bin\Debug\MusicSource\07. under denver.mp3" />
+    <Content Include="bin\Debug\MusicSource\08. vultures.mp3" />
+    <Content Include="bin\Debug\MusicSource\09. eve.mp3" />
+    <Content Include="bin\Debug\MusicSource\10. i am one.mp3" />
+    <Content Include="bin\Debug\MusicSource\11. empire.mp3" />
+    <Content Include="bin\Debug\MusicSource\12. room 138.mp3" />
+    <Content Include="bin\Debug\MusicSource\13. into the fire %28radio edit%29.mp3" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
