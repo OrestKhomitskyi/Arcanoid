@@ -18,11 +18,13 @@ namespace Arcanoid.Music
         public Task Play()
         {
             PlayTokenSource = new CancellationTokenSource();
+
             return Task.Run(async () =>
             {
                 OutputDevice = new WaveOutEvent();
                 OutputDevice.Volume = 1f;
                 enumerator = list.GetEnumerator();
+                return;
                 while (!PlayTokenSource.IsCancellationRequested)
                 {
                     enumerator.MoveNext();
